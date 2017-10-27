@@ -9,5 +9,9 @@
 from ag import Ag
 
 
-tamanho, inicio, fim, tax_cruzamento, tax_mutacao, max_geracoes = (1, 1, 1, 1, 1, 1)
-ag = Ag(tamanho, inicio, fim, tax_cruzamento, tax_mutacao, max_geracoes)
+tam_populacao, inicio, fim, tax_cruzamento, tax_mutacao, max_geracoes = (10, -600, 600, 0.05, 0.3, 10)
+ag = Ag(tam_populacao, inicio, fim, tax_cruzamento, tax_mutacao, max_geracoes)
+
+ag.executar()
+ag.calcAptidao()
+ag.imprimirPopulacao()
