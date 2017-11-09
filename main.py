@@ -1,15 +1,9 @@
 #encoding: utf-8
-'''------------------------------------------------------------------------------------------
-| Tarefa 9 - Implementar um algoritmo genético para resolver um problema de minimização     |
-| 																							|
-| Renan Mateus Bernardo Nascimento															|
-| Vinícius Magalhães D'Assunção																|
-------------------------------------------------------------------------------------------'''
 
 from ag import Ag
 
-tam_populacao, inicio, fim, tax_cruzamento, tax_mutacao, max_geracoes = (3, -600, 600, 0.05, 0.3, 10)
-ag = Ag(tam_populacao, inicio, fim, tax_cruzamento, tax_mutacao, max_geracoes)
+tam_populacao, inicio, fim, alfa, tax_cruzamento, tax_mutacao, max_geracoes = (100, -600, 600, 0.6, 0.6, 0.005, 1000)
+elitismo = True
 
-ag.executar()
-a = ag.selecao()
+ag = Ag(tam_populacao, inicio, fim, alfa, tax_cruzamento, tax_mutacao, max_geracoes)
+ag.executar(elitismo)
