@@ -1,18 +1,18 @@
 #encoding: utf-8
+import matplotlib.pyplot as plt
+from cromossomo import Cromossomo
 import numpy as np
 import random
-from cromossomo import Cromossomo
+
 
 class Ag:
 
-    def __init__(self, tam_populacao, inicio, fim, alfa_cruzamento, tax_cruzamento, tax_mutacao, max_geracoes):
+    def __init__(self, tam_populacao, inicio, fim, tax_cruzamento, tax_mutacao, max_geracoes):
         self.tam_populacao = tam_populacao
         # valor inicial para alelos do cromossomo
         self.inicio = inicio
         # Valor final para alelos do cromossomo
-        self.fim = fim
-        # Valor porcentagem do cromossomo que será utilizada dos pais no cruzamento
-        self.alfa_cruzamento = alfa_cruzamento
+        self.fim = fim        
         self.tax_cruzamento = tax_cruzamento
         self.tax_mutacao = tax_mutacao
         self.max_geracoes = max_geracoes
@@ -60,7 +60,7 @@ class Ag:
         # Sorteia tam_populacao/2 números para selecionar na roleta
         for i in range(0, self.tam_populacao):
             # Sorteia o número entre 0(fechado) e a aptidão total(aberto)
-            num = random.uniform(0, total)0.6
+            num = random.uniform(0, total)
             for intervalo, c in roleta.items():
                 if num >= intervalo[0] and num < intervalo[1]:
                     selecao.append(c)
@@ -77,13 +77,15 @@ class Ag:
             # Sorteia um número de 0 a 1 com duas casas decimais
             num = random.randrange(0, 100) / 100
             if num <= self.tax_cruzamento:
+                # Porcentagem do cromossomo dos pais que será utilizada no cruzamento
+                alfa_cruzamento = random.randrange(0, 100) / 100
                 # Se for menor que a taxa de cruzamento, faz o c/home/aluno/Downloadsruzamento aritmético
                 qtd_alelos = len(pai.alelos)
                 # Cria os cromossomos
                 f1 = Cromossomo(qtd_alelos)
                 f2 = Cromossomo(qtd_alelos)
-                f1.alelos = self.alfa_cruzamento * pai.alelos + (1 - self.alfa_cruzamento) * pai2.alelos
-                f2.alelos = (1 - self.alfa_cruzamento) * pai.alelos + self.alfa_cruzamento * pai2.alelos
+                f1.alelos = alfa_cruzamento * pai.alelos + (1 - alfa_cruzamento) * pai2.alelos
+                f2.alelos = (1 - alfa_cruzamento) * pai.alelos + alfa_cruzamento * pai2.alelos
                 f1.aptidao = self.calcAptidao(f1.alelos[0], f1.alelos[1])
                 f2.aptidao = self.calcAptidao(f2.alelos[0], f2.alelos[1])
                 # Adiciona a lista de filhos
@@ -99,13 +101,13 @@ class Ag:
     ' Faz a mutação utilizando o método CREEP
     '''
     def mutar(self, filhos):
-        n_casas = 1000 # Número de casas decimroundais para avaliar a mutação
+        n_casas = 1000 # Número de casas decimais para avaliar a mutação
         for cromo in filhos:
             for i in range(0, len(cromo.alelos)):
                 # Sorteia um número de 0 a 1 com 3 casas decimais
                 num = random.randrange(0, n_casas) / n_casas
                 if num <= self.tax_mutacao:
-                    delta = random.randrange(self.inicio, self.fim) / 10
+                    delta = random.uniform(-2, 2)
                     cromo.alelos[i] += delta
     
     '''
@@ -147,7 +149,16 @@ class Ag:
         plt.title('Gráfico Aptidão x Iteração')
         plt.legend()
         plt.show()
+       
+    
+    def melhoresCromossomos(self):
+        n_melhores = 3
+        melhores = sorted(self.populacao, reverse=True, key = lambda Cromossomo: Cromossomo.aptidao)
+        print('Melhores cromossomos:')
+        for cromo in melhores[:n_melhores]:
+            print(str(cromo.alelos) + '\t=\t' + str(cromo.aptidao))
         
+    
     '''
     ' Executa max_geracoes vezes o algoritmo genético
     '''
@@ -177,6 +188,8 @@ class Ag:
             t += 1
         # Gera o gráfico de saída
         self.gerarGrafico(tempo, minimo, media, maximo)
+        self.melhoresCromossomos()
+        
 
     def imprimirPopulacao(self):
         for c in self.populacao:
